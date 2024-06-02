@@ -1,0 +1,9 @@
+abs:
+  scheme: "http"
+  url: "localhost"
+  port: "6060"
+  path:
+    register: "/users"
+
+server:
+  port: 7070
