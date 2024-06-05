@@ -29,13 +29,13 @@ public class UserWebClient {
 
     public Optional<ErrorEntity> register(Long userId) {
         URI uri = URI.create(environment.getProperty("abs.url") + environment.getProperty("abs.path.register"));
-        ResponseEntity<ErrorEntity> userEntity = restTemplate.postForEntity(uri, new UserEntity(userId), ErrorEntity.class);
-        if (userEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+        ResponseEntity<ErrorEntity> result = restTemplate.postForEntity(uri, new UserEntity(userId), ErrorEntity.class);
+        if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
             return Optional.empty();
-        } else if (userEntity.hasBody() && userEntity.getBody() != null) {
-            return Optional.of(userEntity.getBody());
+        } else if (result.hasBody() && result.getBody() != null) {
+            return Optional.of(result.getBody());
         } else {
-            log.error("Error registering user: {}", userEntity.getBody());
+            log.error("Error registering user: {}", result.getBody());
             throw new ABSServerException("Exception on abs server, server is not available");
         }
     }
