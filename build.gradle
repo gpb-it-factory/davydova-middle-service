@@ -17,9 +17,9 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+
     // WEB
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '3.3.0'
 
     //MAPPER
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'

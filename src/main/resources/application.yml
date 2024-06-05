@@ -1,7 +1,5 @@
 abs:
-  scheme: "http"
-  url: "localhost"
-  port: "6060"
+  url: "http://localhost:6060"
   path:
     register: "/users"
 

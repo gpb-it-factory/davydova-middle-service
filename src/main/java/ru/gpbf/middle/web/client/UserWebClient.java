@@ -1,44 +1,43 @@
 package ru.gpbf.middle.web.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestTemplate;
+import ru.gpbf.middle.config.WebClientErrorHandler;
 import ru.gpbf.middle.entity.ErrorEntity;
 import ru.gpbf.middle.entity.UserEntity;
 import ru.gpbf.middle.exception.ABSServerException;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Service
 public class UserWebClient {
-    private final WebClient webClient;
+    private static final Logger log = LoggerFactory.getLogger(UserWebClient.class);
+    private final RestTemplate restTemplate;
     private final Environment environment;
 
-    public UserWebClient(WebClient webClient, Environment environment) {
-        this.webClient = webClient;
+
+    public UserWebClient(RestTemplate restTemplate, Environment environment) {
+        this.restTemplate = restTemplate;
         this.environment = environment;
     }
 
-    public Optional<ErrorEntity> register(Long userTelegramId) {
-        return webClient.post().uri(builder -> builder
-                        .scheme(environment.getProperty("abs.scheme"))
-                        .host(environment.getProperty("abs.url"))
-                        .port(environment.getProperty("abs.port"))
-                        .path(environment.getProperty("abs.path.register"))
-                        .build())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(new UserEntity(userTelegramId)), UserEntity.class)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.CREATED)) {
-                        return Mono.empty();
-                    } else if (response.statusCode().is5xxServerError()) {
-                        throw new ABSServerException("Exception on abs server, server is not available");
-                    } else {
-                        return response.bodyToMono(ErrorEntity.class);
-                    }
-                }).blockOptional();
+    public Optional<ErrorEntity> register(Long userId) {
+        restTemplate.setErrorHandler(new WebClientErrorHandler());
+        URI uri = URI.create(environment.getProperty("abs.url") + environment.getProperty("abs.path.register"));
+        ResponseEntity<ErrorEntity> userEntity = restTemplate.postForEntity(uri, new UserEntity(userId), ErrorEntity.class);
+        if (userEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+            return Optional.empty();
+        } else if (userEntity.hasBody() && userEntity.getBody() != null) {
+            return Optional.of(userEntity.getBody());
+        } else {
+            log.error("Error registering user: {}", userEntity.getBody());
+            throw new ABSServerException("Exception on abs server, server is not available");
+        }
     }
 }

@@ -2,20 +2,20 @@ package ru.gpbf.middle.dto;
 
 import java.util.UUID;
 
-public class ErrorResponseTo {
+public final class ErrorResponseTo {
     private String message;
     private String type;
     private String code;
-    private UUID trace_id;
+    private UUID traceId;
 
-    public ErrorResponseTo() {
+    private ErrorResponseTo() {
     }
 
-    public ErrorResponseTo(String message, String type, String code, UUID trace_id) {
+    public ErrorResponseTo(String message, String type, String code, UUID traceId) {
         this.message = message;
         this.type = type;
         this.code = code;
-        this.trace_id = trace_id;
+        this.traceId = traceId;
     }
 
     public String getMessage() {
@@ -33,8 +33,8 @@ public class ErrorResponseTo {
     }
 
 
-    public UUID getTrace_id() {
-        return trace_id;
+    public UUID getTraceId() {
+        return traceId;
     }
 
 
@@ -44,7 +44,7 @@ public class ErrorResponseTo {
                 "message='" + message + '\'' +
                 ", type='" + type + '\'' +
                 ", code='" + code + '\'' +
-                ", trace_id=" + trace_id +
+                ", traceId=" + traceId +
                 '}';
     }
 }

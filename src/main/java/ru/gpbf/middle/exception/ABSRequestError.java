@@ -5,22 +5,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 
 
-public class ABSRequestError {
+public final class ABSRequestError {
     private String message;
     private String type;
     private String code;
-    private UUID trace_id;
+    private UUID traceId;
 
     //need for jackson https://stackoverflow.com/questions/30568353/how-to-de-serialize-an-immutable-object-without-default-constructor-using-object#answer-46601536
     private ABSRequestError() {
     }
 
     @JsonCreator
-    public ABSRequestError(String message, String type, String code, UUID trace_id) {
+    public ABSRequestError(String message, String type, String code, UUID traceId) {
         this.message = message;
         this.type = type;
         this.code = code;
-        this.trace_id = trace_id;
+        this.traceId = traceId;
     }
 
     public String getMessage() {
@@ -35,8 +35,8 @@ public class ABSRequestError {
         return code;
     }
 
-    public UUID getTrace_id() {
-        return trace_id;
+    public UUID getTraceId() {
+        return traceId;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ABSRequestError {
                 "message='" + message + '\'' +
                 ", type='" + type + '\'' +
                 ", code='" + code + '\'' +
-                ", trace_id=" + trace_id +
+                ", traceId=" + traceId +
                 '}';
     }
 }

@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.UUID;
 
-public class ErrorEntity {
+public final class ErrorEntity {
     private String message;
     private String type;
     private String code;
-    private UUID trace_id;
+    private UUID traceId;
 
     //need for jackson and effectively  final class field
-    public ErrorEntity() {
+    private ErrorEntity() {
     }
 
     @JsonCreator
-    public ErrorEntity(String message, String type, String code, UUID trace_id) {
+    public ErrorEntity(String message, String type, String code, UUID traceId) {
         this.message = message;
         this.type = type;
         this.code = code;
-        this.trace_id = trace_id;
+        this.traceId = traceId;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ErrorEntity {
                 "message='" + message + '\'' +
                 ", type='" + type + '\'' +
                 ", code='" + code + '\'' +
-                ", trace_id=" + trace_id +
+                ", traceId=" + traceId +
                 '}';
     }
 }
