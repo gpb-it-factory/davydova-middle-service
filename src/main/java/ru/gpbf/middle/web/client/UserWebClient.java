@@ -28,7 +28,6 @@ public class UserWebClient {
     }
 
     public Optional<ErrorEntity> register(Long userId) {
-        restTemplate.setErrorHandler(new WebClientErrorHandler());
         URI uri = URI.create(environment.getProperty("abs.url") + environment.getProperty("abs.path.register"));
         ResponseEntity<ErrorEntity> userEntity = restTemplate.postForEntity(uri, new UserEntity(userId), ErrorEntity.class);
         if (userEntity.getStatusCode().equals(HttpStatus.NO_CONTENT)) {

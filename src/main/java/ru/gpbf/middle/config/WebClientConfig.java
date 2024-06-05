@@ -12,8 +12,8 @@ public class WebClientConfig {
 
     @Bean
     public RestTemplate restTemplate() {
-
         return restTemplateBuilder()
+                .errorHandler(new WebClientErrorHandler())
                 .build();
     }
 
@@ -22,7 +22,6 @@ public class WebClientConfig {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         restTemplateBuilder.setConnectTimeout(Duration.ofMillis(9000));
         restTemplateBuilder.setReadTimeout(Duration.ofMillis(9000));
-        restTemplateBuilder.errorHandler(new WebClientErrorHandler());
         return restTemplateBuilder;
     }
 }
