@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.gpbf.middle.domain.User;
 import ru.gpbf.middle.entity.ErrorEntity;
 import ru.gpbf.middle.exception.ABSRequestError;
 import ru.gpbf.middle.web.client.UserWebClient;
@@ -22,8 +23,8 @@ public class UserGatewayImpl implements UserGateway {
     }
 
     @Override
-    public Optional<ABSRequestError> register(Long userTelegramId) {
-        Optional<ErrorEntity> response = userWebClient.register(userTelegramId);
+    public Optional<ABSRequestError> register(User user) {
+        Optional<ErrorEntity> response = userWebClient.register(user);
         if (response.isPresent()) {
             log.error(String.valueOf(response.get()));
             return Optional.of(mapper.map(response.get(), ABSRequestError.class));

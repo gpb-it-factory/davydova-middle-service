@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.gpbf.middle.APIData;
 import ru.gpbf.middle.AbstractMockWebServerTest;
+import ru.gpbf.middle.JsonData;
 import ru.gpbf.middle.WebClientData;
 
 
@@ -30,7 +31,7 @@ class AuthControllerTest extends AbstractMockWebServerTest {
 
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userTelegramId\":1}")).andDo(print()).andExpect(status().isOk())
+                        .content(JsonData.userRequest)).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(Matchers.blankString()));
 
     }
@@ -41,7 +42,7 @@ class AuthControllerTest extends AbstractMockWebServerTest {
 
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userTelegramId\":1}")).andDo(print()).andExpect(status().isOk())
+                        .content(JsonData.userRequest)).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(WebClientData.USERS_REGISTER));
 
     }

@@ -18,14 +18,14 @@ class UserRegisterServiceImplTest extends AbstractMockWebServerTest {
     void registerSuccess() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
 
-        Assertions.assertTrue(userRegisterService.register(UserData.userId).isEmpty());
+        Assertions.assertTrue(userRegisterService.register(UserData.createUserRequestClient).isEmpty());
     }
 
     @Test
     void registerUnSuccess() {
         MockWebServerUtil.runWithBody400(mockWebServer);
 
-        Assertions.assertTrue(userRegisterService.register(UserData.userId).isPresent());
+        Assertions.assertTrue(userRegisterService.register(UserData.createUserRequestClient).isPresent());
 
     }
 }

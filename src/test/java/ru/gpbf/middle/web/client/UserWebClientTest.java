@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.gpbf.middle.AbstractMockWebServerTest;
 import ru.gpbf.middle.MockWebServerUtil;
 import ru.gpbf.middle.UserData;
+import ru.gpbf.middle.domain.User;
 import ru.gpbf.middle.entity.ErrorEntity;
 
 import java.util.Optional;
@@ -34,7 +35,7 @@ class UserWebClientTest extends AbstractMockWebServerTest {
     @Test
     void checkSuccessRequest() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        userWebClient.register(UserData.userId);
+        userWebClient.register(UserData.user);
         RecordedRequest request = null;
         try {
             request = mockWebServer.takeRequest();
@@ -42,22 +43,22 @@ class UserWebClientTest extends AbstractMockWebServerTest {
             e.printStackTrace();
         }
 
-        assertThat(request.getBody().readUtf8()).isEqualTo("{\"userId\":1}");
+        assertThat(request.getBody().readUtf8()).isEqualTo("{\"userId\":1,\"userName\":\"alina\"}");
         assertThat(request.getMethod()).isEqualTo("POST");
-        assertThat(request.getPath()).isEqualTo("/users");
+        assertThat(request.getPath()).isEqualTo("/v2/users");
     }
 
     @Test
     void checkSuccessRegister() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        Optional<ErrorEntity> result = userWebClient.register(UserData.userId);
+        Optional<ErrorEntity> result = userWebClient.register(UserData.user);
         Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
     void checkUnsuccessfulRegister() {
         MockWebServerUtil.runWithBody400(mockWebServer);
-        Assertions.assertTrue(userWebClient.register(UserData.userId).isPresent());
+        Assertions.assertTrue(userWebClient.register(UserData.user).isPresent());
 
     }
 
@@ -65,7 +66,7 @@ class UserWebClientTest extends AbstractMockWebServerTest {
     @Test
     void checkNotThrowExceptionIfNull() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        userWebClient.register(null);
+        userWebClient.register(new User(null, null));
         RecordedRequest request = null;
         try {
             request = mockWebServer.takeRequest();
@@ -73,9 +74,9 @@ class UserWebClientTest extends AbstractMockWebServerTest {
             e.printStackTrace();
         }
 
-        assertThat(request.getBody().readUtf8()).isEqualTo("{\"userId\":null}");
+        assertThat(request.getBody().readUtf8()).isEqualTo("{\"userId\":null,\"userName\":null}");
         assertThat(request.getMethod()).isEqualTo("POST");
-        assertThat(request.getPath()).isEqualTo("/users");
+        assertThat(request.getPath()).isEqualTo("/v2/users");
     }
 
 

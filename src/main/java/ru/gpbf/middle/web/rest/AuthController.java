@@ -42,7 +42,7 @@ public class AuthController {
                     schema = @Schema(implementation = ErrorResponseTo.class)) })
     @PostMapping
     public ResponseEntity<?> register(@RequestBody @Valid CreateUserRequestClient user) {
-        Optional<ABSRequestError> result = userRegisterService.register(user.getUserTelegramId());
+        Optional<ABSRequestError> result = userRegisterService.register(user);
         if (result.isPresent()) {
             return new ResponseEntity<>(mapper.map(result.get(), ErrorResponseTo.class), HttpStatus.OK);
 

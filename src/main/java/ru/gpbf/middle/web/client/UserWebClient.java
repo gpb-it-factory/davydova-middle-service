@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.gpbf.middle.config.WebClientErrorHandler;
+import ru.gpbf.middle.domain.User;
 import ru.gpbf.middle.entity.ErrorEntity;
 import ru.gpbf.middle.entity.UserEntity;
 import ru.gpbf.middle.exception.ABSServerException;
@@ -27,9 +27,9 @@ public class UserWebClient {
         this.environment = environment;
     }
 
-    public Optional<ErrorEntity> register(Long userId) {
+    public Optional<ErrorEntity> register(User user) {
         URI uri = URI.create(environment.getProperty("abs.url") + environment.getProperty("abs.path.register"));
-        ResponseEntity<ErrorEntity> result = restTemplate.postForEntity(uri, new UserEntity(userId), ErrorEntity.class);
+        ResponseEntity<ErrorEntity> result = restTemplate.postForEntity(uri, new UserEntity(user.getUserTelegramId(), user.getUserName()), ErrorEntity.class);
         if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
             return Optional.empty();
         } else if (result.hasBody() && result.getBody() != null) {
