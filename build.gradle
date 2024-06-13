@@ -17,7 +17,22 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+
+    // WEB
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.0'
+
+    //MAPPER
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+
+    // VALIDATE
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.3.0'
+
+    //DOCS
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
+
+    // TEST
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.12.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
