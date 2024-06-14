@@ -42,7 +42,7 @@ class AuthControllerTest extends AbstractMockWebServerTest {
 
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonData.userRequest)).andDo(print()).andExpect(status().isOk())
+                        .content(JsonData.userRequest)).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(WebClientData.USERS_REGISTER));
 
     }
@@ -51,7 +51,7 @@ class AuthControllerTest extends AbstractMockWebServerTest {
     void registerUnsuccessfulBadJson() throws Exception {
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userTelegramId\":null}")).andDo(print()).andExpect(status().isOk())
+                        .content("{\"userTelegramId\":null}")).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(Matchers.notNullValue()));
 
     }
@@ -60,7 +60,7 @@ class AuthControllerTest extends AbstractMockWebServerTest {
     void registerUnsuccessfulNullJson() throws Exception {
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(print()).andExpect(status().isOk())
+                ).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(Matchers.notNullValue()));
     }
 }

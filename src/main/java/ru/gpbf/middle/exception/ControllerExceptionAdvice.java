@@ -14,18 +14,18 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(ABSServerException.class)
     public ResponseEntity<ErrorResponseTo> handleBackServerException(Exception e) {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Server error", "500", UUID.randomUUID());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {BadRequest.class})
     public ResponseEntity<ErrorResponseTo> handleBadRequestException(Exception e) {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "400", UUID.randomUUID());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponseTo> handleJacksonException(Exception e) {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "400", UUID.randomUUID());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

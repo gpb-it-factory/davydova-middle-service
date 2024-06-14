@@ -35,16 +35,16 @@ public class AuthController {
 
     @Operation(
             summary = "Регистрирует клиента",
-            description = "При успешно регистрации код 200 с пустым телом, при НЕ успешной код 200 с ошибкой в теле"
+            description = "При успешно регистрации код 200 с пустым телом, при НЕ успешной код 400 с ошибкой в теле"
     )
 
-    @ApiResponse(responseCode = "200", description = "Пользователь НЕ зарегестрирован", content = { @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "400", description = "ошибка регистрации", content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponseTo.class)) })
     @PostMapping
     public ResponseEntity<?> register(@RequestBody @Valid CreateUserRequestClient user) {
         Optional<ABSRequestError> result = userRegisterService.register(user);
         if (result.isPresent()) {
-            return new ResponseEntity<>(mapper.map(result.get(), ErrorResponseTo.class), HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(result.get(), ErrorResponseTo.class), HttpStatus.BAD_REQUEST);
 
         }
         return new ResponseEntity<>(HttpStatus.OK);
