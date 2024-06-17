@@ -28,4 +28,10 @@ public class ControllerExceptionAdvice {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "400", UUID.randomUUID());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<ErrorResponseTo> handleUnexpectedException(Exception e) {
+        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Middle service exception", "500", UUID.randomUUID());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

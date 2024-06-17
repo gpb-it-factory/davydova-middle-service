@@ -14,6 +14,14 @@ public class MockWebServerUtil {
         );
     }
 
+    public static void runCreateAccountWithBody400(MockWebServer mockWebServer) {
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(400)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody(WebClientData.ACCOUNT_REGISTER)
+        );
+    }
+
 
     public static void runEmptyBody204(MockWebServer mockWebServer) {
         mockWebServer.enqueue(

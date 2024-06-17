@@ -3,12 +3,12 @@ package ru.gpbf.middle.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import ru.gpbf.middle.exception.BadRequest;
 
-public class CreateUserRequestClient {
+public class CreateUserRequest {
     private final Long userTelegramId;
     private final String userName;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public CreateUserRequestClient(Long userTelegramId, String userName) {
+    public CreateUserRequest(Long userTelegramId, String userName) {
         if (userTelegramId == null) {
             throw new BadRequest("userTelegramId can not be null");
         }
@@ -29,7 +29,7 @@ public class CreateUserRequestClient {
 
     @Override
     public String toString() {
-        return "CreateUserRequestClient{" +
+        return "CreateUserRequest{" +
                 "userTelegramId=" + userTelegramId +
                 ", userName='" + userName + '\'' +
                 '}';
