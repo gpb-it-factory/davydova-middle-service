@@ -5,20 +5,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import ru.gpbf.middle.AbstractMockWebServerTest;
 import ru.gpbf.middle.AccountData;
 import ru.gpbf.middle.MockWebServerUtil;
-import ru.gpbf.middle.entity.ErrorEntity;
-
-import java.util.Optional;
+import ru.gpbf.middle.exception.ABSServerException;
+import ru.gpbf.middle.exception.ConflictServerException;
+import ru.gpbf.middle.web.client.properties.ABSProperties;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class AccountWebClientTest extends AbstractMockWebServerTest {
     @Autowired
-    private Environment environment;
+    private ABSProperties absProperties;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -27,13 +26,15 @@ class AccountWebClientTest extends AbstractMockWebServerTest {
 
     @BeforeEach
     public void setUpWebClient() {
-        accountWebClient = new AccountWebClient(restTemplate, environment);
+        accountWebClient = new AccountWebClient(restTemplate, absProperties);
     }
 
     @Test
     void checkSuccessRequest() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
+
         accountWebClient.register(AccountData.ACCOUNT_REGISTER);
+
         RecordedRequest request = null;
         try {
             request = mockWebServer.takeRequest();
@@ -49,14 +50,21 @@ class AccountWebClientTest extends AbstractMockWebServerTest {
     @Test
     void checkSuccessRegister() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        Optional<ErrorEntity> result = accountWebClient.register(AccountData.ACCOUNT_REGISTER);
-        Assertions.assertTrue(result.isEmpty());
+
+        Assertions.assertDoesNotThrow(() -> accountWebClient.register(AccountData.ACCOUNT_REGISTER));
     }
 
     @Test
-    void checkUnsuccessfulRegister() {
-        MockWebServerUtil.runCreateAccountWithBody400(mockWebServer);
-        Assertions.assertTrue(accountWebClient.register(AccountData.ACCOUNT_REGISTER).isPresent());
+    void checkUnsuccessfulRegisterConflict() {
+        MockWebServerUtil.runCreateAccountWithBody409(mockWebServer);
 
+        Assertions.assertThrows(ConflictServerException.class, () -> accountWebClient.register(AccountData.ACCOUNT_REGISTER));
+    }
+
+    @Test
+    void checkUnsuccessfulRegisterUnknownException() {
+        MockWebServerUtil.runCreateAccountWithBody400(mockWebServer);
+
+        Assertions.assertThrows(ABSServerException.class, () -> accountWebClient.register(AccountData.ACCOUNT_REGISTER));
     }
 }

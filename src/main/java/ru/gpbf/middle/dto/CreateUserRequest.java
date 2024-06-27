@@ -12,8 +12,8 @@ public class CreateUserRequest {
         if (userTelegramId == null) {
             throw new BadRequest("userTelegramId can not be null");
         }
-        if (userName == null) {
-            throw new BadRequest("userName can not be null");
+        if (userName == null || userName.isEmpty()) {
+            throw new BadRequest("userName can not be null or empty");
         }
         this.userTelegramId = userTelegramId;
         this.userName = userName;

@@ -1,14 +1,14 @@
 package ru.gpbf.middle.application.gateway;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gpbf.middle.*;
-import ru.gpbf.middle.exception.ABSRequestError;
+import ru.gpbf.middle.exception.ABSServerException;
+import ru.gpbf.middle.exception.ConflictServerException;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static ru.gpbf.middle.MockWebServerUtil.runCreateAccountWithBody400;
+import static ru.gpbf.middle.MockWebServerUtil.runCreateAccountWithBody409;
 
 class AccountGatewayImplTest extends AbstractMockWebServerTest {
 
@@ -19,17 +19,22 @@ class AccountGatewayImplTest extends AbstractMockWebServerTest {
     void registerSuccess() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
 
-        Optional<ABSRequestError> absRequestError = accountGateway.register(AccountData.ACCOUNT_REGISTER);
-
-        assertTrue(absRequestError.isEmpty());
+        Assertions.assertDoesNotThrow(() -> accountGateway.register(AccountData.ACCOUNT_REGISTER));
     }
 
     @Test
-    void registerUnsuccessful() {
+    void registerUnsuccessfulConflict() {
+        runCreateAccountWithBody409(mockWebServer);
+
+        Assertions.assertThrows(ConflictServerException.class, () -> accountGateway.register(AccountData.ACCOUNT_REGISTER));
+
+    }
+
+    @Test
+    void registerUnsuccessfulUnknownCode() {
         runCreateAccountWithBody400(mockWebServer);
 
-        Optional<ABSRequestError> absRequestError = accountGateway.register(AccountData.ACCOUNT_REGISTER);
+        Assertions.assertThrows(ABSServerException.class, () -> accountGateway.register(AccountData.ACCOUNT_REGISTER));
 
-        assertTrue(absRequestError.isPresent());
     }
 }

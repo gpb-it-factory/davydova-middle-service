@@ -1,20 +1,20 @@
 package ru.gpbf.middle.application.gateway;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gpbf.middle.AbstractMockWebServerTest;
 import ru.gpbf.middle.MockWebServerUtil;
 import ru.gpbf.middle.UserData;
-import ru.gpbf.middle.domain.User;
-import ru.gpbf.middle.exception.ABSRequestError;
+import ru.gpbf.middle.exception.ABSServerException;
+import ru.gpbf.middle.exception.ConflictServerException;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static ru.gpbf.middle.MockWebServerUtil.runWithBody400;
+import static ru.gpbf.middle.MockWebServerUtil.runRegisterUserWithBody400;
+import static ru.gpbf.middle.MockWebServerUtil.runRegisterUserWithBody409;
 
 
 class UserGatewayImplTest extends AbstractMockWebServerTest {
+
     @Autowired
     UserGatewayImpl userGateway;
 
@@ -23,22 +23,22 @@ class UserGatewayImplTest extends AbstractMockWebServerTest {
     void registerSuccess() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
 
-        Optional<ABSRequestError> absRequestError = userGateway.register(UserData.user);
-        assertTrue(absRequestError.isEmpty());
+        Assertions.assertDoesNotThrow(() -> userGateway.register(UserData.USER));
+
     }
 
     @Test
-    void registerUnsuccessful() {
-        runWithBody400(mockWebServer);
+    void registerUnsuccessfulConflict() {
+        runRegisterUserWithBody409((mockWebServer));
 
-        Optional<ABSRequestError> absRequestError = userGateway.register(UserData.user);
-        assertTrue(absRequestError.isPresent());
+        Assertions.assertThrows(ConflictServerException.class, () -> userGateway.register(UserData.USER));
     }
 
     @Test
-    void registerParamNullExceptionNotThrow() {
-        runWithBody400(mockWebServer);
-        Optional<ABSRequestError> absRequestError = userGateway.register(new User(null, null));
-        assertTrue(absRequestError.isPresent());
+    void registerUnsuccessfulUnknownCode() {
+        runRegisterUserWithBody400((mockWebServer));
+
+        Assertions.assertThrows(ABSServerException.class, () -> userGateway.register(UserData.USER));
     }
+
 }

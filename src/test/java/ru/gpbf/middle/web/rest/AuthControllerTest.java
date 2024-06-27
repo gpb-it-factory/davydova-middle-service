@@ -4,8 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.gpbf.middle.MockWebServerUtil.runEmptyBody204;
-import static ru.gpbf.middle.MockWebServerUtil.runWithBody400;
+import static ru.gpbf.middle.MockWebServerUtil.*;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.gpbf.middle.APIData;
 import ru.gpbf.middle.JsonData;
-import ru.gpbf.middle.WebClientData;
 
 
 class AuthControllerTest extends AbstractControllerTest {
@@ -34,13 +32,24 @@ class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void registerUnsuccessful() throws Exception {
-        runWithBody400(mockWebServer);
+    void registerUnsuccessfulUnknownBakServerException() throws Exception {
+        runRegisterUserWithBody400(mockWebServer);
 
         this.mockMvc.perform(post(APIData.REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonData.CREATE_USER_REQUEST)).andDo(print()).andExpect(status().isBadRequest())
-                .andExpect(content().string(WebClientData.USERS_REGISTER));
+                .andExpect(content().json(JsonData.getUnknownErrorResponse()));
+
+    }
+
+    @Test
+    void registerUnsuccessfulConflict() throws Exception {
+        runRegisterUserWithBody409(mockWebServer);
+
+        this.mockMvc.perform(post(APIData.REGISTER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonData.CREATE_USER_REQUEST)).andDo(print()).andExpect(status().isBadRequest())
+                .andExpect(content().json(JsonData.getCreateUserConflictResponse()));
 
     }
 

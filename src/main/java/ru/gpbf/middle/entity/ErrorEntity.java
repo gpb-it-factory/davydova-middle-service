@@ -22,6 +22,18 @@ public final class ErrorEntity {
         this.traceId = traceId;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public UUID getTraceId() {
+        return traceId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
     @Override
     public String toString() {
         return "ErrorEntity{" +

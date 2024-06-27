@@ -1,8 +1,7 @@
 abs:
   url: "http://localhost:6060"
-  path:
-    register: "/v2/users"
-    account: "/accounts"
+  register: "/v2/users"
+  account: "/accounts"
 
 server:
   port: 7070

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.gpbf.middle.APIData;
 import ru.gpbf.middle.JsonData;
-import ru.gpbf.middle.WebClientData;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,14 +32,23 @@ class AccountControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void registerUnsuccessful() throws Exception {
+    void registerUnsuccessfulConflict() throws Exception {
+        runCreateAccountWithBody409(mockWebServer);
+
+        this.mockMvc.perform(post(APIData.CREATE_ACCOUNT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonData.CREATE_ACCOUNT_REQUEST)).andDo(print()).andExpect(status().isBadRequest())
+                .andExpect(content().json(JsonData.getCreateAccountConflictResponse()));
+    }
+
+    @Test
+    void registerUnsuccessfulUnknownServerException() throws Exception {
         runCreateAccountWithBody400(mockWebServer);
 
         this.mockMvc.perform(post(APIData.CREATE_ACCOUNT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonData.CREATE_ACCOUNT_REQUEST)).andDo(print()).andExpect(status().isBadRequest())
-                .andExpect(content().string(WebClientData.ACCOUNT_REGISTER));
-
+                .andExpect(content().json(JsonData.getUnknownErrorResponse()));
     }
 
     @Test

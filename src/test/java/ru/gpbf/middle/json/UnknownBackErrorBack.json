@@ -1,0 +1,6 @@
+{
+  "message": "some error that does not exist in spec",
+  "type": "Some type",
+  "code": "400",
+  "traceId": "d6127490-b3c2-4922-a059-ee5a134b3584"
+}

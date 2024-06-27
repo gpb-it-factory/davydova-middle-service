@@ -1,0 +1,6 @@
+{
+    "message": "account conflict",
+    "type": "General error",
+    "code": "409",
+    "traceId": "d6128490-b3c2-4922-a059-ee5a134b3574"
+}

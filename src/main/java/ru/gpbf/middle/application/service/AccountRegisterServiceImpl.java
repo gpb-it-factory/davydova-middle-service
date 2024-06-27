@@ -5,9 +5,6 @@ import ru.gpbf.middle.application.gateway.AccountGateway;
 import ru.gpbf.middle.domain.factory.AccountFactory;
 import ru.gpbf.middle.domain.factory.AccountRegister;
 import ru.gpbf.middle.dto.CreateAccountRequest;
-import ru.gpbf.middle.exception.ABSRequestError;
-
-import java.util.Optional;
 
 @Service
 public class AccountRegisterServiceImpl implements AccountRegisterService {
@@ -18,8 +15,8 @@ public class AccountRegisterServiceImpl implements AccountRegisterService {
     }
 
     @Override
-    public Optional<ABSRequestError> register(CreateAccountRequest createAccountRequest) {
+    public void register(CreateAccountRequest createAccountRequest) {
         AccountRegister accountRegister = AccountFactory.getAccount(createAccountRequest.getUserTelegramId(), createAccountRequest.getAccountName());
-        return accountGateway.register(accountRegister);
+        accountGateway.register(accountRegister);
     }
 }
