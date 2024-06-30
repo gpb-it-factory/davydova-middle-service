@@ -1,28 +1,37 @@
-package ru.gpbf.middle.entity;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
+package ru.gpbf.middle.domain;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public final class AccountEntity {
+public final class Account {
     private UUID accountId;
     private String accountName;
     private BigDecimal amount;
 
-    private AccountEntity() {
+    private Account() {
     }
 
-    @JsonCreator
-    public AccountEntity(UUID accountId, String accountName, BigDecimal amount) {
+    public Account(UUID accountId, String accountName, BigDecimal amount) {
         this.accountId = accountId;
         this.accountName = accountName;
         this.amount = amount;
     }
 
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
     @Override
     public String toString() {
-        return "AccountEntity{" +
+        return "Account{" +
                 "accountId=" + accountId +
                 ", accountName='" + accountName + '\'' +
                 ", amount=" + amount +

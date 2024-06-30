@@ -3,7 +3,6 @@ package ru.gpbf.middle.web.rest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.gpbf.middle.APIData;
@@ -15,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.gpbf.middle.MockWebServerUtil.*;
 
-@AutoConfigureMockMvc
+
 class AccountControllerTest extends AbstractControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +32,7 @@ class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     void registerUnsuccessfulConflict() throws Exception {
-        runCreateAccountWithBody409(mockWebServer);
+        runWithBody409(mockWebServer);
 
         this.mockMvc.perform(post(APIData.CREATE_ACCOUNT)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,7 +42,7 @@ class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     void registerUnsuccessfulUnknownServerException() throws Exception {
-        runCreateAccountWithBody400(mockWebServer);
+        runWithBody400(mockWebServer);
 
         this.mockMvc.perform(post(APIData.CREATE_ACCOUNT)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -72,8 +71,8 @@ class AccountControllerTest extends AbstractControllerTest {
     @Test
     void registerUnsuccessfulNullJson() throws Exception {
         this.mockMvc.perform(post(APIData.CREATE_ACCOUNT)
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(print()).andExpect(status().isBadRequest())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(Matchers.notNullValue()));
     }
 
