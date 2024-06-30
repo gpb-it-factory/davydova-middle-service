@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.gpbf.middle.application.gateway.UserGateway;
 import ru.gpbf.middle.domain.User;
-import ru.gpbf.middle.dto.CreateUserRequestClient;
-import ru.gpbf.middle.exception.ABSRequestError;
-
-import java.util.Optional;
+import ru.gpbf.middle.dto.CreateUserRequest;
 
 @Service
 public class UserRegisterServiceImpl implements UserRegisterService {
@@ -20,8 +17,8 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     }
 
     @Override
-    public Optional<ABSRequestError> register(CreateUserRequestClient createUserRequestClient) {
-        User user = modelMapper.map(createUserRequestClient, User.class);
-        return userGateway.register(user);
+    public void register(CreateUserRequest createUserRequest) {
+        User user = modelMapper.map(createUserRequest, User.class);
+        userGateway.register(user);
     }
 }

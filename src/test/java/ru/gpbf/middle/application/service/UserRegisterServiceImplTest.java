@@ -2,30 +2,47 @@ package ru.gpbf.middle.application.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.gpbf.middle.AbstractMockWebServerTest;
-import ru.gpbf.middle.MockWebServerUtil;
+import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import ru.gpbf.middle.UserData;
+import ru.gpbf.middle.application.gateway.UserGateway;
+import ru.gpbf.middle.dto.CreateUserRequest;
+import ru.gpbf.middle.exception.BadRequest;
 
 
-@SpringBootTest
-class UserRegisterServiceImplTest extends AbstractMockWebServerTest {
-    @Autowired
-    private UserRegisterServiceImpl userRegisterService;
+class UserRegisterServiceImplTest {
+
 
     @Test
     void registerSuccess() {
-        MockWebServerUtil.runEmptyBody204(mockWebServer);
+        UserRegisterService userRegisterService = new UserRegisterServiceImpl(Mockito.mock(ModelMapper.class), Mockito.mock(UserGateway.class));
 
-        Assertions.assertTrue(userRegisterService.register(UserData.createUserRequestClient).isEmpty());
+        Assertions.assertDoesNotThrow(() -> userRegisterService.register(UserData.CREATE_USER_REQUEST_CLIENT));
     }
 
     @Test
-    void registerUnSuccess() {
-        MockWebServerUtil.runWithBody400(mockWebServer);
+    void registerUnSuccessUserIdNull() {
+        UserRegisterService userRegisterService = new UserRegisterServiceImpl(Mockito.mock(ModelMapper.class), Mockito.mock(UserGateway.class));
 
-        Assertions.assertTrue(userRegisterService.register(UserData.createUserRequestClient).isPresent());
+        Assertions.assertThrows(BadRequest.class, ()-> userRegisterService.register(new CreateUserRequest(null, UserData.USER_NAME)));
+
+
+
+    }
+
+    @Test
+    void registerUnSuccessNameBlank() {
+        UserRegisterService userRegisterService = new UserRegisterServiceImpl(Mockito.mock(ModelMapper.class), Mockito.mock(UserGateway.class));
+
+        Assertions.assertThrows(BadRequest.class, ()-> userRegisterService.register(new CreateUserRequest(UserData.USER_ID, "")));
+
+    }
+
+    @Test
+    void registerUnSuccessNameNull() {
+        UserRegisterService userRegisterService = new UserRegisterServiceImpl(Mockito.mock(ModelMapper.class), Mockito.mock(UserGateway.class));
+
+        Assertions.assertThrows(BadRequest.class, ()-> userRegisterService.register(new CreateUserRequest(UserData.USER_ID, null)));
 
     }
 }

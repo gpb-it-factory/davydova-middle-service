@@ -12,8 +12,8 @@ import java.util.UUID;
 @ControllerAdvice
 public class ControllerExceptionAdvice {
     @ExceptionHandler(ABSServerException.class)
-    public ResponseEntity<ErrorResponseTo> handleBackServerException(Exception e) {
-        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Server error", "500", UUID.randomUUID());
+    public ResponseEntity<ErrorResponseTo> handleBackServerException(ABSServerException e) {
+        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Back server error", e.getCode(), e.getTraceId());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -23,9 +23,21 @@ public class ControllerExceptionAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {ConflictServerException.class})
+    public ResponseEntity<ErrorResponseTo> handleConflictException(ConflictServerException e) {
+        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "409", e.getTraceId());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponseTo> handleJacksonException(Exception e) {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "400", UUID.randomUUID());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<ErrorResponseTo> handleUnexpectedException(Exception e) {
+        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Middle service exception", "500", UUID.randomUUID());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

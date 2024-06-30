@@ -1,11 +1,7 @@
 package ru.gpbf.middle.application.service;
 
-import ru.gpbf.middle.dto.CreateUserRequestClient;
-import ru.gpbf.middle.exception.ABSRequestError;
-
-import java.util.Optional;
-
+import ru.gpbf.middle.dto.CreateUserRequest;
 
 public interface UserRegisterService {
-    Optional<ABSRequestError> register(CreateUserRequestClient createUserRequestClient);
+    void register(CreateUserRequest createUserRequest);
 }

@@ -1,42 +1,29 @@
 package ru.gpbf.middle.web.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.gpbf.middle.domain.User;
 import ru.gpbf.middle.entity.ErrorEntity;
 import ru.gpbf.middle.entity.UserEntity;
-import ru.gpbf.middle.exception.ABSServerException;
+import ru.gpbf.middle.web.client.properties.ABSProperties;
 
 import java.net.URI;
-import java.util.Optional;
 
 @Service
 public class UserWebClient {
-    private static final Logger log = LoggerFactory.getLogger(UserWebClient.class);
     private final RestTemplate restTemplate;
-    private final Environment environment;
+    private final ABSProperties absProperties;
 
 
-    public UserWebClient(RestTemplate restTemplate, Environment environment) {
+    public UserWebClient(RestTemplate restTemplate, ABSProperties absProperties) {
         this.restTemplate = restTemplate;
-        this.environment = environment;
+        this.absProperties = absProperties;
     }
 
-    public Optional<ErrorEntity> register(User user) {
-        URI uri = URI.create(environment.getProperty("abs.url") + environment.getProperty("abs.path.register"));
+    public void register(User user) {
+        URI uri = URI.create(absProperties.url() + absProperties.register());
         ResponseEntity<ErrorEntity> result = restTemplate.postForEntity(uri, new UserEntity(user.getUserTelegramId(), user.getUserName()), ErrorEntity.class);
-        if (result.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-            return Optional.empty();
-        } else if (result.hasBody() && result.getBody() != null) {
-            return Optional.of(result.getBody());
-        } else {
-            log.error("Error registering user: {}", result.getBody());
-            throw new ABSServerException("Exception on abs server, server is not available");
-        }
+        ErrorEntityHandler.handle(result);
     }
 }

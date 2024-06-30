@@ -5,22 +5,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import ru.gpbf.middle.AbstractMockWebServerTest;
 import ru.gpbf.middle.MockWebServerUtil;
 import ru.gpbf.middle.UserData;
 import ru.gpbf.middle.domain.User;
-import ru.gpbf.middle.entity.ErrorEntity;
-
-import java.util.Optional;
+import ru.gpbf.middle.exception.ABSServerException;
+import ru.gpbf.middle.exception.ConflictServerException;
+import ru.gpbf.middle.web.client.properties.ABSProperties;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 class UserWebClientTest extends AbstractMockWebServerTest {
     @Autowired
-    private Environment environment;
+    private ABSProperties absProperties;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -29,13 +28,13 @@ class UserWebClientTest extends AbstractMockWebServerTest {
 
     @BeforeEach
     public void setUpWebClient() {
-        userWebClient = new UserWebClient(restTemplate, environment);
+        userWebClient = new UserWebClient(restTemplate, absProperties);
     }
 
     @Test
     void checkSuccessRequest() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        userWebClient.register(UserData.user);
+        userWebClient.register(UserData.USER);
         RecordedRequest request = null;
         try {
             request = mockWebServer.takeRequest();
@@ -51,14 +50,23 @@ class UserWebClientTest extends AbstractMockWebServerTest {
     @Test
     void checkSuccessRegister() {
         MockWebServerUtil.runEmptyBody204(mockWebServer);
-        Optional<ErrorEntity> result = userWebClient.register(UserData.user);
-        Assertions.assertTrue(result.isEmpty());
+
+        Assertions.assertDoesNotThrow(() -> userWebClient.register(UserData.USER));
     }
 
     @Test
-    void checkUnsuccessfulRegister() {
-        MockWebServerUtil.runWithBody400(mockWebServer);
-        Assertions.assertTrue(userWebClient.register(UserData.user).isPresent());
+    void checkUnsuccessfulRegisterConflict() {
+        MockWebServerUtil.runRegisterUserWithBody409(mockWebServer);
+
+        Assertions.assertThrows(ConflictServerException.class, () -> userWebClient.register(UserData.USER));
+
+    }
+
+    @Test
+    void checkUnsuccessfulRegisterUnknownException() {
+        MockWebServerUtil.runRegisterUserWithBody400(mockWebServer);
+
+        Assertions.assertThrows(ABSServerException.class, () -> userWebClient.register(UserData.USER));
 
     }
 
