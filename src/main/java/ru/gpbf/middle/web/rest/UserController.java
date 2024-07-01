@@ -15,7 +15,7 @@ public class UserController {
         this.balanceService = balanceService;
     }
 
-    @GetMapping("/{userId}/accounts")
+    @GetMapping("/{userId}/balance")
     public ResponseEntity<?> getBalance(@PathVariable Long userId) {
         return new ResponseEntity<>(new BalanceResponse(balanceService.getBalance(userId)), HttpStatus.OK);
     }

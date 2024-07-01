@@ -21,7 +21,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getBalanceSuccess() throws Exception {
         runAccountsBody200(mockWebServer);
 
-        this.mockMvc.perform(get(APIData.GET_ACCOUNTS)
+        this.mockMvc.perform(get(APIData.GET_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(content().json("{\"balance\":5000.00}"));
@@ -31,7 +31,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getBalanceNotFound() throws Exception {
         runWithEmptyList200(mockWebServer);
 
-        this.mockMvc.perform(get(APIData.GET_ACCOUNTS)
+        this.mockMvc.perform(get(APIData.GET_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().json(JsonData.getAccountNotFoundResponse(), false));
@@ -41,7 +41,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getBalanceAccountDoesNotExist() throws Exception {
         runWithEmptyList200(mockWebServer);
 
-        this.mockMvc.perform(get(APIData.GET_ACCOUNTS)
+        this.mockMvc.perform(get(APIData.GET_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().json(JsonData.getAccountNotFoundResponse(), false));
@@ -51,7 +51,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getBalanceUnsuccessfulConflict() throws Exception {
         runWithBody409(mockWebServer);
 
-        this.mockMvc.perform(get(APIData.GET_ACCOUNTS)
+        this.mockMvc.perform(get(APIData.GET_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().json(JsonData.getAccountsConflictResponse()));
@@ -61,7 +61,7 @@ class UserControllerTest extends AbstractControllerTest {
     void getBalanceUnsuccessfulUnknownServerException() throws Exception {
         runWithBody400(mockWebServer);
 
-        this.mockMvc.perform(get(APIData.GET_ACCOUNTS)
+        this.mockMvc.perform(get(APIData.GET_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().json(JsonData.getUnknownErrorResponse()));
