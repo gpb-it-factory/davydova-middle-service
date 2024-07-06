@@ -22,7 +22,7 @@ public class MockWebServerUtil {
         );
     }
 
-    public static void runCreateAccountWithBody400(MockWebServer mockWebServer) {
+    public static void runWithBody400(MockWebServer mockWebServer) {
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(400)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -30,7 +30,7 @@ public class MockWebServerUtil {
         );
     }
 
-    public static void runCreateAccountWithBody409(MockWebServer mockWebServer) {
+    public static void runWithBody409(MockWebServer mockWebServer) {
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(409)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -43,6 +43,22 @@ public class MockWebServerUtil {
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(204)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        );
+    }
+
+    public static void runAccountsBody200(MockWebServer mockWebServer) {
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody(JsonData.getAccountsResponse())
+        );
+    }
+
+    public static void runWithEmptyList200(MockWebServer mockWebServer) {
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody("[]")
         );
     }
 }

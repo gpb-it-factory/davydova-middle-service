@@ -29,6 +29,12 @@ public class ControllerExceptionAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {NotFoundException.class})
+    public ResponseEntity<ErrorResponseTo> handleNotFound(NotFoundException e) {
+        ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), e.getMessage(), "404", UUID.randomUUID());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponseTo> handleJacksonException(Exception e) {
         ErrorResponseTo response = new ErrorResponseTo(e.getMessage(), "Bad request", "400", UUID.randomUUID());

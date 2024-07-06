@@ -13,12 +13,23 @@ public class JsonData {
         return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/UserConflict.json");
     }
 
+    public static String getAccountsResponse() {
+        return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/Accounts.json");
+    }
+
     public static String getCreateAccountConflictBackResponse() {
         return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/AccountConflictBack.json");
+    }
+    public static String getAccountNotFoundResponse() {
+        return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/AccountsNotFound.json");
     }
 
     public static String getCreateAccountConflictResponse() {
         return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/AccountConflict.json");
+    }
+
+    public static String getAccountsConflictResponse() {
+        return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/AccountsConflict.json");
     }
 
     public static String getUnknownBackServerErrorResponse() {
@@ -28,4 +39,5 @@ public class JsonData {
     public static String getUnknownErrorResponse() {
         return JsonUtil.readFileAsString("src/test/java/ru/gpbf/middle/json/UnknownBackError.json");
     }
+
 }
