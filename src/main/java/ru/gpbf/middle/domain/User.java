@@ -1,6 +1,6 @@
 package ru.gpbf.middle.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+//import com.fasterxml.jackson.annotation.JsonCreator;
 
 public final class User {
     private Long userTelegramId;
@@ -9,7 +9,7 @@ public final class User {
     private User() {
     }
 
-    @JsonCreator
+    //@JsonCreator
     public User(Long userTelegramId, String userName) {
         this.userTelegramId = userTelegramId;
         this.userName = userName;
